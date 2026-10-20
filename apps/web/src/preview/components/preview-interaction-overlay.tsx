@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { usePreviewViewport } from "@/preview/components/preview-viewport";
 import { usePreviewInteraction } from "@/preview/hooks/use-preview-interaction";
@@ -8,8 +10,10 @@ import { SnapGuides } from "./snap-guides";
 import { TextEditOverlay } from "./text-edit-overlay";
 import { usePropertiesStore } from "@/components/editor/panels/properties/stores/properties-store";
 import { useEditor } from "@/editor/use-editor";
+import { useTranslation } from "@/i18n/provider";
 
 export function PreviewInteractionOverlay() {
+	const { t: translateUi } = useTranslation();
 	const [snapLines, setSnapLines] = useState<SnapLine[]>([]);
 	const editor = useEditor();
 	const viewport = usePreviewViewport();
@@ -70,7 +74,7 @@ export function PreviewInteractionOverlay() {
 			<div
 				className="absolute inset-0 pointer-events-auto"
 				role="application"
-				aria-label="Preview canvas"
+				aria-label={translateUi("Preview canvas")}
 				style={{
 					cursor: viewport.isPanning
 						? "grabbing"

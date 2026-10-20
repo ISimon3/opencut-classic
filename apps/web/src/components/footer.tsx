@@ -44,7 +44,7 @@ export function Footer() {
 								alt="OpenCut"
 								width={24}
 								height={24}
-								className="invert dark:invert-0"
+								className=""
 							/>
 							<span className="text-lg font-bold">OpenCut</span>
 						</div>

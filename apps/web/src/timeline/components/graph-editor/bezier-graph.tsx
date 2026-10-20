@@ -6,6 +6,7 @@ import { useCommittedRef } from "@/hooks/use-committed-ref";
 import { getBezierPoint } from "@/animation/bezier";
 import type { NormalizedCubicBezier } from "@/animation/types";
 import { cn } from "@/utils/ui";
+import { useTranslation } from "@/i18n/provider";
 
 const GRAPH_WIDTH = 140;
 const GRAPH_HEIGHT = 94;
@@ -63,8 +64,24 @@ function curvePath({ curve }: { curve: NormalizedCubicBezier }) {
 	const points: string[] = [];
 	for (let i = 0; i <= CURVE_SEGMENTS; i++) {
 		const progress = i / CURVE_SEGMENTS;
-		const x = toSvgX({ value: getBezierPoint({ progress, p0: 0, p1: curve[0], p2: curve[2], p3: 1 }) });
-		const y = toSvgY({ value: getBezierPoint({ progress, p0: 0, p1: curve[1], p2: curve[3], p3: 1 }) });
+		const x = toSvgX({
+			value: getBezierPoint({
+				progress,
+				p0: 0,
+				p1: curve[0],
+				p2: curve[2],
+				p3: 1,
+			}),
+		});
+		const y = toSvgY({
+			value: getBezierPoint({
+				progress,
+				p0: 0,
+				p1: curve[1],
+				p2: curve[3],
+				p3: 1,
+			}),
+		});
 		points.push(`${x},${y}`);
 	}
 	return `M${points.join("L")}`;
@@ -85,16 +102,16 @@ export function BezierGraph({
 	onChangeEnd?: (value: NormalizedCubicBezier) => void;
 	onCancel?: () => void;
 }) {
+	const { t: translateUi } = useTranslation();
 	const svgRef = useRef<SVGSVGElement>(null);
 	const [activeHandle, setActiveHandle] = useState<BezierHandle | null>(null);
 	const isShiftPressedRef = useShiftKey();
 	const latestValueRef = useCommittedRef(value);
 
-	function getPointerPosition({
-		event,
-	}: {
-		event: PointerEvent;
-	}): { x: number; y: number } {
+	function getPointerPosition({ event }: { event: PointerEvent }): {
+		x: number;
+		y: number;
+	} {
 		const svg = svgRef.current;
 		if (!svg) return { x: 0, y: 0 };
 		const rect = svg.getBoundingClientRect();
@@ -164,7 +181,7 @@ export function BezierGraph({
 			onPointerUp={onPointerUp}
 			onPointerCancel={onPointerCancel}
 		>
-			<title>Bezier curve editor</title>
+			<title>{translateUi("Bezier curve editor")}</title>
 			<line
 				x1={p0.x}
 				y1={p0.y}

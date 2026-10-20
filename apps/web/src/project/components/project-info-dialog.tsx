@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	Dialog,
 	DialogBody,
@@ -10,6 +12,7 @@ import type { TProjectMetadata } from "@/project/types";
 import { formatDate } from "@/utils/date";
 import { formatTimecode, mediaTimeToSeconds } from "opencut-wasm";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/i18n/provider";
 
 function InfoRow({
 	label,
@@ -35,11 +38,15 @@ export function ProjectInfoDialog({
 	onOpenChange: (open: boolean) => void;
 	project: TProjectMetadata;
 }) {
+	const { language, t: translateUi } = useTranslation();
 	const durationSeconds = mediaTimeToSeconds({ time: project.duration });
 	const durationFormatted =
 		project.duration > 0
-		? (formatTimecode({ time: project.duration, format: durationSeconds >= 3600 ? "HH:MM:SS" : "MM:SS" }) ?? "")
-		: "0:00";
+			? (formatTimecode({
+					time: project.duration,
+					format: durationSeconds >= 3600 ? "HH:MM:SS" : "MM:SS",
+				}) ?? "")
+			: "0:00";
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -51,17 +58,17 @@ export function ProjectInfoDialog({
 				</DialogHeader>
 
 				<DialogBody className="flex flex-col">
-					<InfoRow label="Duration" value={durationFormatted} />
+					<InfoRow label={translateUi("Duration")} value={durationFormatted} />
 					<InfoRow
-						label="Created"
-						value={formatDate({ date: project.createdAt })}
+						label={translateUi("Created")}
+						value={formatDate({ date: project.createdAt, locale: language })}
 					/>
 					<InfoRow
-						label="Modified"
-						value={formatDate({ date: project.updatedAt })}
+						label={translateUi("Modified")}
+						value={formatDate({ date: project.updatedAt, locale: language })}
 					/>
 					<InfoRow
-						label="Project ID"
+						label={translateUi("Project ID")}
 						value={
 							<code className="text-xs bg-muted px-1.5 py-0.5 rounded">
 								{project.id.slice(0, 8)}
@@ -71,9 +78,11 @@ export function ProjectInfoDialog({
 				</DialogBody>
 				<DialogFooter>
 					<Button variant="outline" onClick={() => onOpenChange(false)}>
-						Close
+						{translateUi("Close")}
 					</Button>
-					<Button onClick={() => onOpenChange(false)}>Done</Button>
+					<Button onClick={() => onOpenChange(false)}>
+						{translateUi("Done")}
+					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

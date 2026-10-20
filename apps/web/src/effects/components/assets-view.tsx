@@ -8,12 +8,14 @@ import { effectPreviewService } from "@/services/renderer/effect-preview";
 import { useEditor } from "@/editor/use-editor";
 import { buildEffectElement } from "@/timeline/element-utils";
 import type { EffectDefinition } from "@/effects/types";
+import { useTranslation } from "@/i18n/provider";
 
 export function EffectsView() {
+	const { t: translateUi } = useTranslation();
 	const effects = effectsRegistry.getAll();
 
 	return (
-		<PanelView title="Effects">
+		<PanelView title={translateUi("Effects")}>
 			<EffectsGrid effects={effects} />
 		</PanelView>
 	);
@@ -54,6 +56,7 @@ function EffectPreviewCanvas({ effectType }: { effectType: string }) {
 }
 
 function EffectItem({ effect }: { effect: EffectDefinition }) {
+	const { t: translateUi } = useTranslation();
 	const editor = useEditor();
 
 	const handleAddToTimeline = useCallback(() => {
@@ -73,7 +76,7 @@ function EffectItem({ effect }: { effect: EffectDefinition }) {
 
 	return (
 		<DraggableItem
-			name={effect.name}
+			name={translateUi(effect.name)}
 			preview={preview}
 			dragData={{
 				id: effect.type,

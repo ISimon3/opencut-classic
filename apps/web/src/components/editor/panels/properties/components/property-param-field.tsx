@@ -24,6 +24,7 @@ import {
 import { usePropertyDraft } from "../hooks/use-property-draft";
 import { KeyframeToggle } from "./keyframe-toggle";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslation } from "@/i18n/provider";
 
 export function PropertyParamField({
 	param,
@@ -42,9 +43,10 @@ export function PropertyParamField({
 		onToggle: () => void;
 	};
 }) {
+	const { t: translateUi } = useTranslation();
 	return (
 		<SectionField
-			label={param.label}
+			label={translateUi(param.label)}
 			beforeLabel={
 				keyframe && param.keyframable !== false ? (
 					<KeyframeToggle
@@ -77,6 +79,7 @@ function ParamInput({
 	onPreview: (value: ParamValue) => void;
 	onCommit: () => void;
 }) {
+	const { t: translateUi } = useTranslation();
 	if (param.type === "number") {
 		return (
 			<NumberParamField
@@ -115,7 +118,7 @@ function ParamInput({
 				<SelectContent>
 					{param.options.map((option) => (
 						<SelectItem key={option.value} value={option.value}>
-							{option.label}
+							{translateUi(option.label)}
 						</SelectItem>
 					))}
 				</SelectContent>
@@ -180,9 +183,7 @@ function NumberParamField({
 		);
 
 	const previewFromDisplay = (displayVal: number) => {
-		const clamped = clampDisplayValue(
-			snapToStep({ value: displayVal, step }),
-		);
+		const clamped = clampDisplayValue(snapToStep({ value: displayVal, step }));
 		onPreview(clamped / displayMultiplier);
 	};
 

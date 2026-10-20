@@ -16,6 +16,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import { useTranslation } from "@/i18n/provider";
 
 export function ShortcutsDialog({
 	isOpen,
@@ -24,6 +25,7 @@ export function ShortcutsDialog({
 	isOpen: boolean;
 	onOpenChange: (open: boolean) => void;
 }) {
+	const { t: translateUi } = useTranslation();
 	const [recordingShortcut, setRecordingShortcut] =
 		useState<KeyboardShortcut | null>(null);
 
@@ -110,7 +112,7 @@ export function ShortcutsDialog({
 		<Dialog open={isOpen} onOpenChange={onOpenChange}>
 			<DialogContent className="flex max-h-[80vh] max-w-2xl flex-col p-0">
 				<DialogHeader>
-					<DialogTitle>Keyboard shortcuts</DialogTitle>
+					<DialogTitle>{translateUi("Keyboard shortcuts")}</DialogTitle>
 				</DialogHeader>
 
 				<DialogBody className="scrollbar-thin grow overflow-y-auto">
@@ -118,7 +120,7 @@ export function ShortcutsDialog({
 						{categories.map((category) => (
 							<div key={category} className="flex flex-col gap-1">
 								<h3 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-									{category}
+									{translateUi(category)}
 								</h3>
 								<div className="flex flex-col gap-1">
 									{shortcuts
@@ -140,7 +142,7 @@ export function ShortcutsDialog({
 				</DialogBody>
 				<DialogFooter>
 					<Button variant="destructive" onClick={resetToDefaults}>
-						Reset to default
+						{translateUi("Reset to default")}
 					</Button>
 				</DialogFooter>
 			</DialogContent>
@@ -157,6 +159,7 @@ function ShortcutItem({
 	isRecording: boolean;
 	onStartRecording: (params: { shortcut: KeyboardShortcut }) => void;
 }) {
+	const { t: translateUi } = useTranslation();
 	const displayKeys = shortcut.keys.filter((key: string) => {
 		if (
 			key.includes("Cmd") &&
@@ -173,7 +176,7 @@ function ShortcutItem({
 				{shortcut.icon && (
 					<div className="text-muted-foreground">{shortcut.icon}</div>
 				)}
-				<span className="text-sm">{shortcut.description}</span>
+				<span className="text-sm">{translateUi(shortcut.description)}</span>
 			</div>
 			<div className="flex items-center gap-2">
 				{displayKeys.map((key: string, index: number) => (
@@ -193,7 +196,9 @@ function ShortcutItem({
 							})}
 						</div>
 						{index < displayKeys.length - 1 && (
-							<span className="text-muted-foreground text-xs">or</span>
+							<span className="text-muted-foreground text-xs">
+								{translateUi("or")}
+							</span>
 						)}
 					</div>
 				))}
@@ -211,6 +216,7 @@ function EditableShortcutKey({
 	isRecording: boolean;
 	onStartRecording: () => void;
 }) {
+	const { t: translateUi } = useTranslation();
 	const handleClick = (e: React.MouseEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -223,7 +229,9 @@ function EditableShortcutKey({
 			size="sm"
 			onClick={handleClick}
 			title={
-				isRecording ? "Press any key combination..." : "Click to edit shortcut"
+				isRecording
+					? translateUi("Press any key combination...")
+					: translateUi("Click to edit shortcut")
 			}
 		>
 			{children}

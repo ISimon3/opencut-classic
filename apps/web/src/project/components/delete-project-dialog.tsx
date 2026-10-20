@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -10,6 +12,8 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useTranslation } from "@/i18n/provider";
+import { useState } from "react";
 
 export function DeleteProjectDialog({
 	isOpen,
@@ -22,12 +26,19 @@ export function DeleteProjectDialog({
 	onConfirm: () => void;
 	projectNames: string[];
 }) {
+	const { t: translateUi } = useTranslation();
+	const [confirmation, setConfirmation] = useState("");
+	const canDelete = confirmation === "DELETE";
+	const handleOpenChange = (open: boolean) => {
+		setConfirmation("");
+		onOpenChange(open);
+	};
 	const count = projectNames.length;
 	const isSingle = count === 1;
 	const singleName = isSingle ? projectNames[0] : null;
 
 	return (
-		<Dialog open={isOpen} onOpenChange={onOpenChange}>
+		<Dialog open={isOpen} onOpenChange={handleOpenChange}>
 			<DialogContent
 				onOpenAutoFocus={(event) => {
 					event.preventDefault();
@@ -38,31 +49,35 @@ export function DeleteProjectDialog({
 					<DialogTitle>
 						{singleName ? (
 							<>
-								{"Delete '"}
+								{translateUi("Delete '")}
 								<span className="inline-block max-w-[300px] truncate align-bottom">
 									{singleName}
 								</span>
-								{"'?"}
+								{translateUi("'?")}
 							</>
 						) : (
-							`Delete ${count} projects?`
+							translateUi("Delete {value0} projects?", { value0: count })
 						)}
 					</DialogTitle>
 				</DialogHeader>
 				<DialogBody>
 					<Alert variant="destructive">
-						<AlertTitle>Warning</AlertTitle>
+						<AlertTitle>{translateUi("Warning")}</AlertTitle>
 						<AlertDescription>
-							This will permanently delete{" "}
-							{singleName ? `"${singleName}"` : `${count} projects`} and all
-							associated files.
+							{translateUi("This will permanently delete")}{" "}
+							{singleName
+								? `"${singleName}"`
+								: translateUi("{value0} projects", { value0: count })}{" "}
+							{translateUi("and all associated files.")}
 						</AlertDescription>
 					</Alert>
 					<div className="flex flex-col gap-3">
 						<Label className="text-xs font-semibold text-slate-500">
-							Type "DELETE" to confirm
+							{translateUi('Type "DELETE" to confirm')}
 						</Label>
 						<Input
+							value={confirmation}
+							onChange={(event) => setConfirmation(event.target.value)}
 							type="text"
 							placeholder="DELETE"
 							size="lg"
@@ -71,11 +86,19 @@ export function DeleteProjectDialog({
 					</div>
 				</DialogBody>
 				<DialogFooter>
-					<Button variant="outline" onClick={() => onOpenChange(false)}>
-						Cancel
+					<Button variant="outline" onClick={() => handleOpenChange(false)}>
+						{translateUi("Cancel")}
 					</Button>
-					<Button variant="destructive" onClick={onConfirm}>
-						Delete project
+					<Button
+						variant="destructive"
+						disabled={!canDelete}
+						onClick={() => {
+							if (!canDelete) return;
+							setConfirmation("");
+							onConfirm();
+						}}
+					>
+						{translateUi("Delete project")}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

@@ -1,7 +1,21 @@
 import type { MutableRefObject } from "react";
-import type { TAction } from "./definitions";
+import { ACTIONS, type TAction } from "./definitions";
 
 export type { TAction };
+
+const ACTIONS_WITH_REQUIRED_ARGS: ReadonlySet<string> = new Set([
+	"remove-media-asset",
+	"remove-media-assets",
+]);
+
+export function isActionWithOptionalArgs(
+	value: string,
+): value is TActionWithOptionalArgs {
+	return (
+		Object.prototype.hasOwnProperty.call(ACTIONS, value) &&
+		!ACTIONS_WITH_REQUIRED_ARGS.has(value)
+	);
+}
 
 export type TActionArgsMap = {
 	"seek-forward": { seconds: number } | undefined;

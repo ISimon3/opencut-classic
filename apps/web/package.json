@@ -15,7 +15,10 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push:local": "cross-env NODE_ENV=development drizzle-kit push",
-    "db:push:prod": "cross-env NODE_ENV=production drizzle-kit push"
+    "db:push:prod": "cross-env NODE_ENV=production drizzle-kit push",
+    "desktop:prepare": "bun scripts/prepare-desktop.mjs",
+    "desktop:build": "tauri build",
+    "desktop:dev": "bun run desktop:prepare && tauri dev"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
@@ -85,6 +88,7 @@
     "@napi-rs/canvas": "^0.1.92",
     "@tailwindcss/postcss": "^4.2.1",
     "@tailwindcss/typography": "^0.5.19",
+    "@tauri-apps/cli": "2.12.1",
     "@types/bun": "latest",
     "@types/node": "^24.2.1",
     "@types/pg": "^8.15.4",

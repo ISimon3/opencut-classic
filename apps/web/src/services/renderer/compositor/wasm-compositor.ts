@@ -18,6 +18,7 @@ import type {
 	RenderedTextureDescriptor,
 	TextureUploadDescriptor,
 } from "./types";
+import { toWasmFrameDescriptor } from "./wasm-frame-descriptor";
 
 /**
  * One slot in the derived-texture cache. The OffscreenCanvas is persistent —
@@ -88,7 +89,7 @@ class WasmCompositor {
 	}
 
 	render(frame: FrameDescriptor) {
-		renderFrame(frame);
+		renderFrame(toWasmFrameDescriptor(frame));
 		if (isRenderPerfEnabled()) {
 			recordWasmFrameProfile(
 				getLastFrameProfile() as Array<{ name: string; durationMs: number }>,
